@@ -1,0 +1,7 @@
+{
+  "name": "signetPayServer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "adam wong <adamwong246@gmail.com>",
+  "license": "MIT"
+}
