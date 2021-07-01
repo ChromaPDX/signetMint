@@ -1,0 +1,1 @@
+the state folder hold redux-store stuff. One may wish to extract logic from the redux actions into more easily tested unit tests but there is otherwise little of testable value. 
