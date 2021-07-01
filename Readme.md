@@ -15,3 +15,8 @@ When a customer claims ownership, the NFT is tranferred to their wallet. They ca
 ### how this relates to "track and trace"
 
 When a businss owner creates a product, the NFT is minted and traded to their wallet. They either sell or trade these NFTs with other business owners as the product moves through the production pipeline. If product needs to be subdivided, the signet mint will trade them 1 Signet for many.
+
+### Testing strategy
+There are 2 ways to write tests.
+1) The first is inspired by Cucumber and follows a singular Given, followed by multiple Whens and then finally multiple Thens. See scenarios.js
+2) The second strategy allows for logically complex tests by requires JS. See test.js

@@ -10,6 +10,8 @@ const cucumber = (selector, { givens, whens, thens }, scenarioKey, givensMatcher
       const matches = [...given.matchAll(givenMatcher.matcher)]
       if (matches.length === 1) {
         store = storeCreator(initialState)
+      } else {
+        throw Error(`No Given for '${givenMatcher.matcher}'`);
       }
     })
   });
