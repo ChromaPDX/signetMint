@@ -3,5 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "author": "adam wong <adamwong246@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha test.js"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^6.9.6"
+  },
+  "dependencies": {
+    "mocha": "^9.0.1",
+    "redux": "^4.1.0",
+    "reselect": "^4.0.0"
+  }
 }
