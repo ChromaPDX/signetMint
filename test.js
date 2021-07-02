@@ -1,11 +1,11 @@
 const assert = require("assert");
 
 const reduxReselectCucumber = require("./reduxReselectCucumber.js");
-const newOrderTests = require("./newOrder/test/index.js");
-const stateTests = require("./state/test/index.js");
-const storeCreator = require("./state/store.js");
-const initialState = require("./state/initialState.js");
-const { NewOrderSelector } = require("./newOrder/selector.js");
+const newOrderTests = require("./src/newOrder/test/index.js");
+const stateTests = require("./src/state/test/index.js");
+const storeCreator = require("./src/state/store.js");
+const initialState = require("./src/state/initialState.js");
+const { NewOrderSelector } = require("./src/newOrder/selector.js");
 
 console.log("hello payserver tests");
 

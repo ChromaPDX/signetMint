@@ -80,7 +80,7 @@ module.exports = {
         "The user 'marcus' registers with brand 'canna-co'",
         "The user 'marcus', through 'canna-co', registers a product 'Canna Cola'",
         "the user 'marcus', through 'canna-co', creates a Signet set of 10 for product 'Canna Cola'",
-        "the user 'marcus', through 'canna-co', creates a Reward for product 'Canna Cola'",
+        "the user 'marcus', through 'canna-co', creates a Reward for (product: 'Canna Cola', amount: 2, coin: 'testCoin')",
         "the user 'leif' claims Signet 0 for product 'Canna Cola'",
         "the user 'leif' claims Signet 1 for product 'Canna Cola'",
         "the user 'leif' claims Signet 2 for product 'Canna Cola'",
@@ -95,9 +95,8 @@ module.exports = {
         "the user marcus has a wallet which has not #0 of Canna Cola",
         "the user marcus has a wallet which has not #1 of Canna Cola",
         "the user marcus has a wallet which has #2 of Canna Cola",
-
         "there is a product registered as 'Canna Cola'",
-
+        "the user marcus has a wallet which has 2 of testCoin",
       ]
     },
 

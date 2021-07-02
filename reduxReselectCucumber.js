@@ -1,5 +1,5 @@
-const storeCreator = require("./state/store.js");
-const initialState = require("./state/initialState.js");
+const storeCreator = require("./src/state/store.js");
+const initialState = require("./src/state/initialState.js");
 
 const cucumber = (selector, { givens, whens, thens }, scenarioKey, givensMatchers, whensMatchers, thensMatchers) => {
 
