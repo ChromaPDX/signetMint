@@ -45,10 +45,10 @@ module.exports = [{
     }
   },
   {
-    matcher: /the user '(.*)', through '(.*)', creates a Reward for product '(.*)'/gm,
+    matcher: /the user '(.*)', through '(.*)', creates a Reward for product: '(.*)', amount: ([0-9]*), coin: '(.*)'/gm,
     action: USER_CREATE_REWARD,
     payload: (match) => {
-      return { userName: match[0][1], brandName: match[0][2], productName: match[0][3] }
+      return { userName: match[0][1], brandName: match[0][2], productName: match[0][3], coinAmount: parseInt(match[0][4]), coinName: match[0][5] }
     }
   },
   {

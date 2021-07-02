@@ -5,6 +5,7 @@ const baseSelector = state => state;
 module.exports = {
   NewOrderSelector: createSelector([baseSelector], (base) => {
     return {
+      // rewards: base.rewards,
       numberOfUsers: () => base.users.length,
       numberOfProducts: () => base.products.length,
       walletLengthOfUser: (userName) => base.users.find((u) => u.name === userName).wallet.length,

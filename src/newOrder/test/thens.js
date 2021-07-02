@@ -56,4 +56,10 @@ module.exports = [
       assert(computed.rewardForProductExists(match[0][1]));
     }
   },
+  {
+    matcher: /the user marcus has a wallet which has 2 of testCoin/gm,
+    assert: (match, computed) => {
+      assert(computed.rewardForProductExists(match[0][1]));
+    }
+  },
 ]
