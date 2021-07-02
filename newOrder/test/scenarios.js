@@ -1,125 +1,106 @@
-// These scenarios use cucumber syntax to interogate selectors. 
-// Given statements setup the initial state.
-// When statements make actions
-// Then statements make assertions on the output of the selector.
-
 module.exports = {
   "very simple scenarios": {
-    "My first scenario": {
+
+    "sanity check": {
       givens: ["an initial store"],
       whens: [
-        "I change the staged sandwich name to 'Adams sandwich'",
-        "I add the sandwich",
-        "I select the ingredient '1' for 'Adams sandwich'",
-        "I push the selected ingredient for sandwich '0'"
+        "A user 'marcus' signs up",
+        "A user 'leif' signs up",
+        "A user 'adam' signs up",
+        "A user 'alice' signs up",
+        "A user 'bob' signs up",
       ],
-      thens: ["the running tally for ingredient '1' should be '99'"]
+      thens: [
+        "there are 5 users",
+        "there is a user 'marcus'",
+        "there is a user 'leif'",
+        "the user 'marcus' has a wallet which is empty",
+        "the user 'leif' has a wallet which is empty",
+        "the number of products is 0"
+      ]
     },
+
+    "My third scenario": {
+      givens: ["an initial store"],
+      whens: [
+        "A user 'marcus' signs up",
+        "A user 'leif' signs up",
+        "The user 'marcus' registers with brand 'canna-co'",
+        "The user 'marcus', through 'canna-co', registers a product 'Canna Cola'",
+        "The user 'marcus', through 'canna-co', registers a product 'Canna Cookies'",
+        "the user 'marcus', through 'canna-co', creates a Signet set of 10 for product 'Canna Cola'",
+      ],
+      thens: [
+        "there are 2 users",
+        "the number of products is 2",
+        "there is a product registered as 'Canna Cola'",
+        "there is a product registered as 'Canna Cookies'",
+        "the user marcus has a wallet which has 10 Signets"
+      ]
+    },
+
+    "My forth scenario": {
+      givens: ["an initial store"],
+      whens: [
+        "A user 'marcus' signs up",
+        "A user 'leif' signs up",
+        "A user 'adam' signs up",
+        "The user 'marcus' registers with brand 'canna-co'",
+        "The user 'marcus', through 'canna-co', registers a product 'Canna Cola'",
+        "the user 'marcus', through 'canna-co', creates a Signet set of 10 for product 'Canna Cola'",
+        "the user 'leif' claims Signet 0 for product 'Canna Cola'",
+        "the user 'leif' claims Signet 1 for product 'Canna Cola'",
+        "the user 'leif' claims Signet 2 for product 'Canna Cola'",
+        "the user 'adam' claims Signet 9 for product 'Canna Cola'",
+      ],
+      thens: [
+        "there are 3 users",
+        "the number of products is 1",
+        "there is a product registered as 'Canna Cola'",
+        "there is a user 'marcus'",
+        "there is a user 'leif'",
+        "there is a user 'adam'",
+        "the user marcus has a wallet which has 6 Signets",
+        "the user leif has a wallet which has 3 Signets",
+        "the user adam has a wallet which has 1 Signets",
+        "the user leif has a wallet which has #0 of Canna Cola",
+        "the user leif has a wallet which has #1 of Canna Cola",
+        "the user leif has a wallet which has #2 of Canna Cola",
+        "the user marcus has a wallet which has #3 of Canna Cola",
+        "the user marcus has a wallet which has #4 of Canna Cola",
+        "the user adam has a wallet which has #9 of Canna Cola",
+      ]
+    },
+
+    "My fifth scenario": {
+      givens: ["an initial store"],
+      whens: [
+        "A user 'marcus' signs up",
+        "A user 'leif' signs up",
+        "The user 'marcus' registers with brand 'canna-co'",
+        "The user 'marcus', through 'canna-co', registers a product 'Canna Cola'",
+        "the user 'marcus', through 'canna-co', creates a Signet set of 10 for product 'Canna Cola'",
+        "the user 'marcus', through 'canna-co', creates a Reward for product 'Canna Cola'",
+        "the user 'leif' claims Signet 0 for product 'Canna Cola'",
+        "the user 'leif' claims Signet 1 for product 'Canna Cola'",
+        "the user 'leif' claims Signet 2 for product 'Canna Cola'",
+        "the user 'leif' redeems the reward for Signet 1 of product 'Canna Cola'",
+        "the user 'leif' redeems the reward for Signet 2 of product 'Canna Cola'",
+      ],
+      thens: [
+        "there is a a Reward program for 'Canna Cola'",
+        "the user leif has a wallet which has #0 of Canna Cola",
+        "the user leif has a wallet which has not #1 of Canna Cola",
+        "the user leif has a wallet which has not #2 of Canna Cola",
+        "the user marcus has a wallet which has not #0 of Canna Cola",
+        "the user marcus has a wallet which has not #1 of Canna Cola",
+        "the user marcus has a wallet which has #2 of Canna Cola",
+
+        "there is a product registered as 'Canna Cola'",
+
+      ]
+    },
+
+
   }
 };
-
-// module.exports = {
-//   "very simple scenarios": {
-//     "My first scenario": {
-//       givens: ["an initial store with ingredient #1 amount '100'"],
-//       whens: [
-//         "I change the staged sandwich name to 'Adams sandwich'",
-//         "I add the sandwich",
-//         "I select the ingredient '1' for 'Adams sandwich'",
-//         "I push the selected ingredient for sandwich '0'"
-//       ],
-//       thens: ["the running tally for ingredient '1' should be '99'"]
-//     },
-//     "Test 2": {
-//       givens: ["an initial store with ingredient #1 amount '100'"],
-//       whens: [
-//         "I change the staged sandwich name to 'Chaches sandwich'",
-//         "I add the sandwich",
-//         "I select the ingredient '1' for 'Chaches sandwich'",
-//         "I push the selected ingredient for sandwich '0'"
-//       ],
-//       thens: ["the running tally for ingredient '1' should be '99'"]
-//     },
-//     "Test of gratuity": {
-//       givens: ["an initial store with ingredient #1 amount '100'"],
-//       whens: ["I change the gratuity name to '20'"],
-//       thens: ["the gratuity should be '20'"]
-//     },
-//     "Test of name change": {
-//       givens: ["an initial store with ingredient #1 amount '100'"],
-//       whens: [
-//         "I change the staged sandwich name to 'Adams sandwich'",
-//         "I add the sandwich",
-//         "I change the name of sandwich #0 to 'Chaches sandwich'"
-//       ],
-//       thens: ["sandwich #0 should have name 'Chaches sandwich'"]
-//     },
-//     "Test of sandwiches add": {
-//       givens: ["an initial store with ingredient #1 amount '100'"],
-//       whens: [
-//         "I change the staged sandwich name to 'Adams sandwich'",
-//         "I add the sandwich",
-//         "I change the staged sandwich name to 'Chaches sandwich'",
-//         "I add the sandwich",
-//       ],
-//       thens: [
-//         "sandwich #0 should have name 'Adams sandwich'",
-//         "sandwich #1 should have name 'Chaches sandwich'"
-//       ]
-//     },
-//     "Test of sandwiches remove": {
-//       givens: ["an initial store with ingredient #1 amount '100'"],
-//       whens: [
-//         "I change the staged sandwich name to 'Adams sandwich'",
-//         "I add the sandwich",
-//         "I change the staged sandwich name to 'Chaches sandwich'",
-//         "I add the sandwich",
-//         "I remove sandwich #1"
-//       ],
-//       thens: [
-//         "there should be 1 sandwiches",
-//         "sandwich #0 should have name 'Adams sandwich'"
-//       ]
-//     },
-//   },
-//   "more complex scenarios": {
-//     "Push": {
-//       givens: ["an initial store with ingredient #1 amount '100'"],
-//       whens: [
-//         "I change the staged sandwich name to 'Adams sandwich'",
-//         "I add the sandwich",
-//         "I select the ingredient '1' for 'Adams sandwich'",
-//         "I push the selected ingredient for sandwich '0'",
-//         "I select the ingredient '1' for 'Adams sandwich'",
-//         "I push the selected ingredient for sandwich '0'"
-//       ],
-//       thens: ["sandwich #0 should have 2 ingredients"]
-//     },
-
-//     "Push and pop": {
-//       givens: ["an initial store with ingredient #1 amount '100'"],
-//       whens: [
-//         "I change the staged sandwich name to 'Adams sandwich'",
-//         "I add the sandwich",
-//         "I select the ingredient '1' for 'Adams sandwich'",
-//         "I push the selected ingredient for sandwich '0'",
-//         "I pop the top of sandwich 'Adams sandwich'",
-//       ],
-//       thens: ["sandwich #0 should have 0 ingredients"]
-//     },
-
-//     "Placing an order": {
-//       givens: ["an initial store with ingredient #1 amount '100'"],
-//       whens: [
-//         "I change the staged sandwich name to 'Adams sandwich'",
-//         "I add the sandwich",
-//         "I select the ingredient '1' for 'Adams sandwich'",
-//         "I push the selected ingredient for sandwich '0'",
-//         "I submit the order with a grand total of '9.99'",
-//       ],
-//       thens: ["ingredients #1 should have amount 99"]
-//     }
-
-//   }
-
-// };

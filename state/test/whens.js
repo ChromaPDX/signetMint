@@ -1,66 +1,61 @@
-// This file holds the "when" statements.
-// "Whens" always correspond to a redux action and payload
-
 const {
-  ADD_SANDWICH,
-  CHANGE_GRATUITY,
-  CHANGE_SANDWICH_NAME,
-  CHANGE_STAGED_SANDWICH_NAME,
-  NEW_ORDER,
-  POP_INGREDIENT,
-  PUSH_INGREDIENT,
-  REMOVE_SANDWICH,
-  SELECT_INGREDIENT_TO_PUSH,
-  COMPLETE_ORDER
+  NEW_USER,
+  REGISTER_USER_WITH_BRAND,
+  USER_REGISTER_PRODUCT_WITH_BRAND,
+  USER_MINT_SIGNETS_FOR_PRODUCT_OF_BRAND,
+  USER_CLAIMS_SIGNET_PRODUCT,
+  USER_CREATE_REWARD,
+  REDEEM
 } = require("../Actions.js");
 
 module.exports = [{
-    matcher: /I submit the order with a grand total of '(.*)'/gm,
-    action: NEW_ORDER,
+    matcher: /The user 'marcus' registers with brand 'canna-co'/gm,
+    action: REGISTER_USER_WITH_BRAND,
     payload: (match) => match[0][1]
   },
   {
-    matcher: /I remove sandwich #(.*)/gm,
-    action: REMOVE_SANDWICH,
-    payload: (match) => parseInt(match[0][1])
-  },
-  {
-    matcher: /I pop the top of sandwich '(.*)'/gm,
-    action: POP_INGREDIENT,
+    matcher: /A user '(.*)' signs up/gm,
+    action: NEW_USER,
     payload: (match) => match[0][1]
   },
   {
-    matcher: /I change the name of sandwich #(.*) to '(.*)'/gm,
-    action: CHANGE_SANDWICH_NAME,
+    matcher: /The user 'marcus', through 'canna-co', registers a product '(.*)'/gm,
+    action: USER_REGISTER_PRODUCT_WITH_BRAND,
     payload: (match) => {
-      return { index: parseInt(match[0][1]), sandwichName: (match[0][2]) };
+      return { userName: 'marcus', productName: match[0][1], brandName: 'canna-co' };
     }
   },
   {
-    matcher: /I change the gratuity name to '(.*)'/gm,
-    action: CHANGE_GRATUITY,
-    payload: (match) => parseInt(match[0][1])
-  },
-  {
-    matcher: /I change the staged sandwich name to '(.*)'/gm,
-    action: CHANGE_STAGED_SANDWICH_NAME,
-    payload: (match) => match[0][1]
-  },
-  {
-    matcher: /I select the ingredient '(.*)' for '(.*)'/gm,
-    action: SELECT_INGREDIENT_TO_PUSH,
+    matcher: /the user 'marcus', through 'canna-co', creates a Signet set of ([0-9]*) for product 'Canna Cola'/gm,
+    action: USER_MINT_SIGNETS_FOR_PRODUCT_OF_BRAND,
     payload: (match) => {
-      return { sandwichName: match[0][2], ingredientId: parseInt(match[0][1]) }
+      return {
+        userName: 'marcus',
+        brandName: 'canna-co',
+        productName: 'Canna Cola',
+        numberOfSignets: parseInt(match[0][1])
+      };
     }
   },
   {
-    matcher: /I push the selected ingredient for sandwich '(.*)'/gm,
-    action: PUSH_INGREDIENT,
-    payload: (match) => parseInt(match[0][1])
+    matcher: /the user '(.*)' claims Signet ([0-9]*) for product 'Canna Cola'/gm,
+    action: USER_CLAIMS_SIGNET_PRODUCT,
+    payload: (match) => {
+      return { userName: match[0][1], productName: 'Canna Cola', signetIndex: parseInt(match[0][2]) }
+    }
   },
   {
-    matcher: /I add the sandwich/gm,
-    action: ADD_SANDWICH,
-    payload: () => true
-  }
+    matcher: /the user '(.*)', through '(.*)', creates a Reward for product '(.*)'/gm,
+    action: USER_CREATE_REWARD,
+    payload: (match) => {
+      return { userName: match[0][1], brandName: match[0][2], productName: match[0][3] }
+    }
+  },
+  {
+    matcher: /the user '(.*)' redeems the reward for Signet ([0-9]*) of product '(.*)'/gm,
+    action: REDEEM,
+    payload: (match) => {
+      return { userName: match[0][1], signetIndex: parseInt(match[0][2]), productName: match[0][3] }
+    }
+  },
 ]

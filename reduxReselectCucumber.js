@@ -17,32 +17,42 @@ const cucumber = (selector, { givens, whens, thens }, scenarioKey, givensMatcher
   });
 
   whens.forEach(when => {
+
+    let found = false;
     whensMatchers.forEach((whensMatcher) => {
       const matches = [...when.matchAll(whensMatcher.matcher)]
       if (matches.length === 1) {
         store.dispatch({ type: whensMatcher.action, payload: whensMatcher.payload(matches) })
+        found = true;
       }
-    })
+    });
+
+    if (!found) {
+      throw Error(`No WHEN for '${when}'`);
+    }
   });
 
   const computed = selector(store.getState());
 
-  let ran = false;
+
   thens.forEach(then => {
+    let found = false;
     thensMatchers.forEach((thensMatcher) => {
       const matches = [...then.matchAll(thensMatcher.matcher)]
       if (matches.length === 1) {
         it(scenarioKey, () => {
-          thensMatcher.assert(matches, computed)
-          ran = true
+          thensMatcher.assert(matches, computed);
         });
-
+        found = true;
       }
-    })
-  });
+    });
 
-  // if (ran === false) throw Error("no thens?!")
-}
+    if (!found) {
+      throw Error(`No THEN for '${then}'`);
+    }
+
+  });
+};
 
 module.exports = (
   componentTest, stateTest
@@ -57,4 +67,4 @@ module.exports = (
       })
     });
   })
-}
+};

@@ -1,148 +1,148 @@
 const createStore = require("redux").createStore;
 
 const {
-  ADD_SANDWICH,
-  CHANGE_GRATUITY,
-  CHANGE_SANDWICH_NAME,
-  CHANGE_STAGED_SANDWICH_NAME,
-  NEW_ORDER,
-  POP_INGREDIENT,
-  PUSH_INGREDIENT,
-  REMOVE_SANDWICH,
-  SELECT_INGREDIENT_TO_PUSH,
   INITIALIZE,
-  COMPLETE_ORDER
+  NEW_USER,
+  REDEEM,
+  USER_CLAIMS_SIGNET_PRODUCT,
+  USER_CREATE_REWARD,
+  USER_MINT_SIGNETS_FOR_PRODUCT_OF_BRAND,
+  USER_REGISTER_PRODUCT_WITH_BRAND,
 } = require("../state/Actions.js");
 
+const partition = (ary, callback) =>
+  ary.reduce((acc, e) => {
+    acc[callback(e) ? 0 : 1].push(e)
+    return acc
+  }, [
+    [],
+    []
+  ])
+
 module.exports = (initialState) => createStore((state = [], action) => {
-  // console.log(action)
+  // console.log(action);
   switch (action.type) {
 
     case INITIALIZE:
       return {
         ...state,
         INITAILIZED: true
+      };
+
+    case REDEEM:
+      {
+        const { userName, productName, signetIndex } = action.payload;
+
+        const redeemer = state.users.find((u) => u.name === action.payload.userName);
+        const product = state.products.find((p) => p.productName === action.payload.productName);
+        const minter = state.users.find((u) => u.name === product.userName);
+
+        const partitions = partition(redeemer.wallet, (nft) => {
+          return (nft.productName === productName && nft.ndx === signetIndex);
+        });
+
+        redeemer.wallet = partitions[1];
+        minter.wallet.push(...partitions[0]);
+
+        return {
+          ...state,
+          users: state.users.map((u) => {
+            if (u.name === userName) {
+              return redeemer;
+            } else if (u.name === minter.name) {
+              return minter
+            }
+            return u;
+          })
+        };
       }
 
-    case REMOVE_SANDWICH:
-      return {
-        ...state,
-        sandwiches: state.sandwiches.filter((s, ndx) => ndx !== action.payload)
-      }
 
-    case CHANGE_GRATUITY:
-      return {
-        ...state,
-        gratuity: Math.max(action.payload, 0)
-      }
 
-    case SELECT_INGREDIENT_TO_PUSH:
-      return {
-        ...state,
-        sandwiches: state.sandwiches.map((sandwich) => {
-          if (sandwich.name === action.payload.sandwichName) {
-            sandwich.toPush = action.payload.ingredientId
-          }
-          return sandwich
-        })
-      }
 
-    case PUSH_INGREDIENT:
-      return {
-        ...state,
-        sandwiches: state.sandwiches.map((sandwich, ndx) => {
-          if (ndx === action.payload) {
-            sandwich.recipe.push(sandwich.toPush)
-            sandwich.toPush = ""
-          }
-          return sandwich
-        }),
-      }
+    case USER_CREATE_REWARD:
 
-    case POP_INGREDIENT:
       return {
         ...state,
-        sandwiches: state.sandwiches.map((s) => {
-          if (s.name === action.payload) {
-            s.recipe.pop()
-          }
-          return s;
-        })
-      }
-
-    case CHANGE_SANDWICH_NAME:
-      return {
-        ...state,
-        sandwiches: state.sandwiches.map((s, ndx) => {
-          if (ndx === action.payload.index) {
-            s.name = action.payload.sandwichName
-          }
-          return s;
-        })
-      }
-
-    case ADD_SANDWICH:
-      return {
-        ...state,
-        stagedSandwich: "",
-        sandwiches: [
-          ...state.sandwiches,
+        rewards: [
+          ...state.rewards,
           {
-            name: state.stagedSandwich,
-            recipe: [],
-            toPush: ""
+            ...action.payload
           }
         ]
-      }
+      };
 
-    case CHANGE_STAGED_SANDWICH_NAME:
-      return {
-        ...state,
-        stagedSandwich: action.payload
-      }
-
-    case NEW_ORDER:
-      const existingKeys = Object.keys(state.orders)
-      return {
-        ...state,
-        sandwiches: [],
-        orders: {
-          ...state.orders,
-          [Math.max(...(existingKeys.length ? existingKeys.map((oid) => parseInt(oid)) : [0])) + 1]: {
-            grandTotal: action.payload,
-            status: "open",
-            sandwiches: state.sandwiches.map((s) => {
-              return { name: s.name, recipe: s.recipe }
-            })
+    case USER_MINT_SIGNETS_FOR_PRODUCT_OF_BRAND:
+      const users = state.users.map((u) => {
+        if (u.name === action.payload.userName) {
+          return {
+            ...u,
+            wallet: [
+              ...u.wallet,
+              ...Array.from(Array(action.payload.numberOfSignets).keys()).map((ndx) => {
+                return {
+                  ndx,
+                  ...action.payload,
+                  // uid: uuidv4()
+                }
+              })
+            ]
           }
-        },
-        ingredients: state.ingredients.map((ingredient) => {
-          state.sandwiches.forEach((sandwich) => {
-            sandwich.recipe.forEach((ingredientId) => {
-              if (ingredientId === ingredient.id) {
-                ingredient.amount = ingredient.amount - 1
-              }
-            })
-          })
-
-          return ingredient
-        })
-      }
-
-    case COMPLETE_ORDER:
-      const newOrders = {};
-      Object.keys(state.orders).forEach((ok) => {
-        newOrders[ok] = state.orders[ok];
-        if (ok === action.payload) {
-          newOrders[ok].status = "closed";
         }
-
-      })
+        return u;
+      });
 
       return {
         ...state,
-        orders: newOrders
+        users
+      };
+
+    case USER_REGISTER_PRODUCT_WITH_BRAND:
+      return {
+        ...state,
+        products: [
+          ...state.products, action.payload
+        ]
+      };
+
+    case USER_CLAIMS_SIGNET_PRODUCT:
+      {
+        const { userName, productName, signetIndex } = action.payload;
+
+        const recipient = state.users.find((u) => u.name === userName);
+        const product = state.products.find((p) => p.productName === productName);
+        const sender = state.users.find((u) => u.name === product.userName);
+
+        const partitions = partition(sender.wallet, (nft) => {
+          return (nft.productName === productName && nft.ndx === signetIndex);
+        });
+
+        sender.wallet = partitions[1];
+        recipient.wallet.push(...partitions[0]);
+
+        return {
+          ...state,
+          users: state.users.map((u) => {
+            if (u.name === userName) {
+              return recipient;
+            } else if (u.name === sender.name) {
+              return sender
+            }
+            return u;
+          })
+        };
       }
+
+    case NEW_USER:
+      const newUser = {
+        name: action.payload,
+        wallet: []
+      };
+
+      return {
+        ...state,
+        users: [...state.users, newUser]
+      };
 
     default:
       return state

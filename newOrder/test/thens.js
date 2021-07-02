@@ -1,60 +1,59 @@
-// This file holds the "then" statements.
-// "Thens" always correspond to an assertion on the output of a selector
-
-// import assert from "assert";
 const assert = require("assert");
 
-module.exports = [{
-    matcher: /ingredients #(.*) should have amount (.*)/gm,
-    assert: (match, computed) => {
-      assert.equal(
-        computed.ingredients.find((i) => i.id === parseInt(match[0][1])).amount,
-        parseInt(match[0][2])
-      )
-    }
-  },
-  {
-    matcher: /sandwich #(.*) should have name '(.*)'/gm,
-    assert: (match, computed) => {
-      assert.equal(
-        computed.sandwiches[parseInt(match[0][1])].name,
-        match[0][2]
-      )
-    }
-  },
-  {
-    matcher: /there should be (.*) sandwiches/gm,
-    assert: (match, computed) => {
-      assert.equal(
-        computed.sandwiches.length,
-        parseInt(match[0][1])
-      )
-    }
-  },
+module.exports = [
 
   {
-    matcher: /sandwich #(.*) should have (.*) ingredients/gm,
+    matcher: /the user '(.*)' has a wallet which is empty/gm,
+    assert: (match, computed) => assert.equal(computed.walletLengthOfUser(match[0][1]), 0)
+  },
+  {
+    matcher: /there are ([0-9]*) users/gm,
     assert: (match, computed) => {
-      assert.equal(
-        computed.sandwiches[parseInt(match[0][1])].recipe.length,
-        parseInt(match[0][2])
-      )
+      assert.equal(computed.numberOfUsers(), parseInt(match[0][1]));
     }
   },
-
   {
-    matcher: /the running tally for ingredient '(.*)' should be '(.*)'/gm,
-    assert: (match, computed) => { assert.equal(computed.runningTally[match[0][1]], parseInt(match[0][2])) }
+    matcher: /the user (.*) has a wallet which has ([0-9]*) Signets/gm,
+    assert: (match, computed) => assert.equal(
+      computed.walletLengthOfUser(match[0][1]), parseInt(match[0][2])
+    )
   },
   {
-    matcher: /the gratuity should be '(.*)'/gm,
-    assert: (match, computed) => assert.equal(computed.gratuity, parseInt(match[0][1]))
-  },
-  {
-    matcher: /sandwich #(.*) should have name '(.*)'/gm,
+    matcher: /the number of products is ([0-9]*)/gm,
     assert: (match, computed) => {
-      assert.equal(computed.sandwiches[parseInt(match[0][1])].name, match[0][2])
+      assert.equal(computed.numberOfProducts(), parseInt(match[0][1]));
     }
-  }
-
+  },
+  {
+    matcher: /there is a product registered as '(.*)'/gm,
+    assert: (match, computed) => {
+      assert(computed.productWithNameExists(match[0][1]));
+    }
+  },
+  {
+    matcher: /there is a user '(.*)'/gm,
+    assert: (match, computed) => {
+      assert(computed.userWithNameExists(match[0][1]));
+    }
+  },
+  {
+    matcher: /the user (.*) has a wallet which has #([0-9]*) of (.*)/gm,
+    assert: (match, computed) => {
+      assert(
+        computed.userHasSignet(match[0][1], parseInt(match[0][2]), match[0][3])
+      );
+    }
+  },
+  {
+    matcher: /the user (.*) has a wallet which has not #([0-9]*) of (.*)/gm,
+    assert: (match, computed) => {
+      assert(computed.userHasSignet(match[0][1], parseInt(match[0][2]), match[0][3]));
+    }
+  },
+  {
+    matcher: /there is a a Reward program for '(.*)'/gm,
+    assert: (match, computed) => {
+      assert(computed.rewardForProductExists(match[0][1]));
+    }
+  },
 ]
