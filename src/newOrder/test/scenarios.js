@@ -89,14 +89,14 @@ module.exports = {
       ],
       thens: [
         "there is a a Reward program for 'Canna Cola'",
-        // "the user leif has a wallet which has #0 of Canna Cola",
-        // "the user leif has a wallet which has not #1 of Canna Cola",
-        // "the user leif has a wallet which has not #2 of Canna Cola",
-        // "the user marcus has a wallet which has not #0 of Canna Cola",
-        // "the user marcus has a wallet which has not #1 of Canna Cola",
-        // "the user marcus has a wallet which has #2 of Canna Cola",
-        // "there is a product registered as 'Canna Cola'",
-        // "the user marcus has a wallet which has 2 of testCoin",
+        "the user leif has a wallet which has #0 of Canna Cola",
+        "the user leif has a wallet which has not #1 of Canna Cola",
+        "the user leif has a wallet which has not #2 of Canna Cola",
+        "the user marcus has a wallet which has not #0 of Canna Cola",
+        "the user marcus has a wallet which has not #1 of Canna Cola",
+        "the user marcus has a wallet which has #2 of Canna Cola",
+        "there is a product registered as 'Canna Cola'",
+        "the user marcus has a wallet which has 2 of testCoin",
       ]
     },
 
