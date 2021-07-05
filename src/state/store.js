@@ -2,6 +2,7 @@ const createStore = require("redux").createStore;
 
 const {
   INITIALIZE,
+  MOVE_MONEY,
   NEW_USER,
   REDEEM,
   USER_CLAIMS_SIGNET_PRODUCT,
@@ -29,6 +30,22 @@ module.exports = (initialState) => createStore((state = [], action) => {
         INITAILIZED: true
       };
 
+    case MOVE_MONEY:
+      {
+        const { userName, coinName, coinAmount } = action.payload;
+
+        return {
+          ...state,
+          users: state.users.map((u) => {
+            if (u.name === userName) {
+              const oldAmount = u.wallet.fts[coinName] || 0;
+              u.wallet.fts[coinName] = oldAmount + coinAmount;
+            }
+            return u;
+          })
+        };
+      }
+
     case REDEEM:
       {
         const { userName, productName, signetIndex } = action.payload;
@@ -37,12 +54,17 @@ module.exports = (initialState) => createStore((state = [], action) => {
         const product = state.products.find((p) => p.productName === action.payload.productName);
         const minter = state.users.find((u) => u.name === product.userName);
 
-        const partitions = partition(redeemer.wallet, (nft) => {
+        const reward = state.rewards.find((r) => r.productName === productName);
+
+        redeemer.wallet.fts[reward.coinName] = (redeemer.wallet.fts[reward.coinName] || 0) + reward.coinAmount;
+        minter.wallet.fts[reward.coinName] = (minter.wallet.fts[reward.coinName] || 0) - reward.coinAmount;
+
+        const partitions = partition(redeemer.wallet.nfts, (nft) => {
           return (nft.productName === productName && nft.ndx === signetIndex);
         });
 
-        redeemer.wallet = partitions[1];
-        minter.wallet.push(...partitions[0]);
+        redeemer.wallet.nfts = partitions[1];
+        minter.wallet.nfts.push(...partitions[0]);
 
         return {
           ...state,
@@ -56,9 +78,6 @@ module.exports = (initialState) => createStore((state = [], action) => {
           })
         };
       }
-
-
-
 
     case USER_CREATE_REWARD:
 
@@ -77,16 +96,18 @@ module.exports = (initialState) => createStore((state = [], action) => {
         if (u.name === action.payload.userName) {
           return {
             ...u,
-            wallet: [
-              ...u.wallet,
-              ...Array.from(Array(action.payload.numberOfSignets).keys()).map((ndx) => {
-                return {
-                  ndx,
-                  ...action.payload,
-                  // uid: uuidv4()
-                }
-              })
-            ]
+            wallet: {
+              fts: u.wallet.fts,
+              nfts: [
+                ...u.wallet.nfts,
+                ...Array.from(Array(action.payload.numberOfSignets).keys()).map((ndx) => {
+                  return {
+                    ndx,
+                    ...action.payload
+                  }
+                })
+              ]
+            }
           }
         }
         return u;
@@ -113,12 +134,12 @@ module.exports = (initialState) => createStore((state = [], action) => {
         const product = state.products.find((p) => p.productName === productName);
         const sender = state.users.find((u) => u.name === product.userName);
 
-        const partitions = partition(sender.wallet, (nft) => {
+        const partitions = partition(sender.wallet.nfts, (nft) => {
           return (nft.productName === productName && nft.ndx === signetIndex);
         });
 
-        sender.wallet = partitions[1];
-        recipient.wallet.push(...partitions[0]);
+        sender.wallet.nfts = partitions[1];
+        recipient.wallet.nfts.push(...partitions[0]);
 
         return {
           ...state,
@@ -136,7 +157,10 @@ module.exports = (initialState) => createStore((state = [], action) => {
     case NEW_USER:
       const newUser = {
         name: action.payload,
-        wallet: []
+        wallet: {
+          fts: {},
+          nfts: []
+        }
       };
 
       return {
